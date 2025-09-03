@@ -31,7 +31,7 @@ function App() {
   }
 
   function onClickHandler(){
-    const check=isInsideGeofence(user.lat,user.lng,centre.lat,centre.lng,50);
+    const check=isInsideGeofence(user.lat,user.lng,centre.lat,centre.lng,100000);
     const result=check?"You are inside geofencing":"You are outside geofencing";
     setInside(result);
   }
