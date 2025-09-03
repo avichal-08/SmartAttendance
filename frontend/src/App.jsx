@@ -36,7 +36,7 @@ function App() {
         const {latitude,longitude}=pos.coords;
         setUser({lat:latitude,lng:longitude});
 
-        const check=isInsideGeofence(latitude,longitude,centre.lat,centre.lng,100000);
+        const check=isInsideGeofence(latitude,longitude,centre.lat,centre.lng,50);
         const result=check?"You are inside geofencing":"You are outside geofencing";
         setMessage(result);
       },
