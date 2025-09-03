@@ -5,7 +5,7 @@ function App() {
    const [user,setUser]=useState({lat:'',lng:''});
    const [inside,setInside]=useState(false);
 
-    function Location(){
+    useEffect(() => {
     navigator.geolocation.getCurrentPosition((pos) => {
       const {latitude,longitude}=pos.coords;
       setUser({lat:latitude,lng:longitude});
@@ -14,9 +14,7 @@ function App() {
     timeout: 10000,
     maximumAge: 0  
   });
-  };
-
-  Location();
+  }, []);
 
   function isInsideGeofence(userLat, userLng, centerLat, centerLng, radiusMeters) {
     const toRad=(x)=>(x*Math.PI)/180;
@@ -33,10 +31,18 @@ function App() {
   }
 
   function onClickHandler(){
-    Location();
-    const check=isInsideGeofence(user.lat,user.lng,centre.lat,centre.lng,100000);
-    const result=check?"You are inside geofencing":"You are outside geofencing";
-    setInside(result);
+   navigator.geolocation.getCurrentPosition(
+      (pos)=>{
+        const {latitude,longitude}=pos.coords;
+        setUser({lat:latitude,lng:longitude});
+
+        const check=isInsideGeofence(latitude,longitude,centre.lat,centre.lng,100000);
+        const result=check?"You are inside geofencing":"You are outside geofencing";
+        setInside(result);
+      },
+      (err)=>console.error(err),
+      {enableHighAccuracy:true,timeout:10000,maximumAge:0}
+    );
   }
 
   return (
