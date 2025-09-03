@@ -5,7 +5,7 @@ function App() {
    const [user,setUser]=useState({lat:'',lng:''});
    const [inside,setInside]=useState(false);
 
-    useEffect(() => {
+    function Location(){
     navigator.geolocation.getCurrentPosition((pos) => {
       const {latitude,longitude}=pos.coords;
       setUser({lat:latitude,lng:longitude});
@@ -14,7 +14,9 @@ function App() {
     timeout: 10000,
     maximumAge: 0  
   });
-  }, []);
+  };
+
+  Location();
 
   function isInsideGeofence(userLat, userLng, centerLat, centerLng, radiusMeters) {
     const toRad=(x)=>(x*Math.PI)/180;
@@ -31,6 +33,7 @@ function App() {
   }
 
   function onClickHandler(){
+    Location();
     const check=isInsideGeofence(user.lat,user.lng,centre.lat,centre.lng,100000);
     const result=check?"You are inside geofencing":"You are outside geofencing";
     setInside(result);
@@ -39,7 +42,7 @@ function App() {
   return (
     <div className='bg-black w-full h-screen p-2'>
       <button onClick={onClickHandler} className='w-full md:w-50 h-20 text-3xl text-white cursor-pointer rounded-4xl mt-20 md:ml-[20%] bg-blue-500'>Click here</button>
-      {inside&&<div className='w-full md:w-[40%] h-20 rounded-4xl text-4xl text-white pt-3 pl-4 mt-20 md:ml-[20%] bg-blue-500'>
+      {inside&&<div className='w-full md:w-[40%] rounded-4xl text-4xl text-white pt-3 pl-4 mt-20 md:ml-[20%] bg-blue-500'>
         {inside}
         </div>}
       {inside&&<div className='w-full md:w-[40%]  rounded-4xl text-4xl text-white py-3 pl-4 mt-20 md:ml-[20%] bg-blue-500'>
