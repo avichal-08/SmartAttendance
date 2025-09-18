@@ -42,7 +42,8 @@ export default function Session(){
         }
 
     }
-fetchStudent()}catch (err) {
+fetchStudent()
+}catch (err) {
   console.error(err);
 } finally {
   setLoading(false);
@@ -84,9 +85,9 @@ const downloadPDF = () => {
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col items-center py-8 px-4">
             <h1 className="text-2xl font-bold mb-6 text-gray-800">Student List</h1>
-            <button onClick={downloadPDF} className="mb-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            {/* <button onClick={downloadPDF} className="mb-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                 Download PDF
-            </button>
+            </button> */}
             <h1 className="w-full max-w-md mb-3 text-2xl">Total Students Present : {number}</h1>
             <ul className="w-full max-w-md space-y-4">
                 {students.map((student) => (

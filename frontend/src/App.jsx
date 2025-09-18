@@ -14,6 +14,7 @@ import Tdashboard from './pages/teacher/dashboard';
 import Slogin from './pages/student/login';
 import Ssignup from './pages/student/signup';
 import StudentDashboard from './pages/student/dashboard';
+import Attended from './pages/student/atttended';
 
 
 export default function App(){
@@ -36,6 +37,7 @@ export default function App(){
           <Route path='login' element={<Slogin/>}/>
           <Route path='signup' element={<Ssignup/>}/>
           <Route path='dashboard' element={<StudentDashboard/>}/>
+          <Route path='attended' element={<Attended/>}/>
       </Route>
       
     </Routes>
