@@ -36,6 +36,12 @@ export default function Tdashboard() {
         }
     },[])
 
+    const handleLogout = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("role")
+    navigate("/role")
+  };
+
     const handleClick=()=>{
         console.log("inside HC")
         if(status==="Create Session")
@@ -123,6 +129,12 @@ export default function Tdashboard() {
                             <div className="mt-4 text-red-600 text-center">{error}</div>
                         )}
                     </div>
+                    <button
+            onClick={handleLogout}
+            className="px-6 py-3 w-full mt-3 rounded-lg bg-red-500 text-white font-bold text-lg hover:bg-red-600 transition-colors"
+          >
+            Logout
+          </button>
                     </div>
             </div>
     );
