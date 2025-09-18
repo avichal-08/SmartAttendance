@@ -15,6 +15,10 @@ router.get('/',authMiddleware,async (req,res)=>{
 
 router.post('/login',async (req,res)=>{
 
+    if(!(req.body.gmail&&req.body.password)){
+        return res.status(401).json({message:"Wrong Credentials"})
+    }
+
     const student=await Student.findOne({
         gmail:req.body.gmail,
     })
@@ -33,7 +37,8 @@ router.post('/login',async (req,res)=>{
 
     res.status(200).json({
         token:token,
-        isLogin:true
+        isLogin:true,
+        role:"student"
     })
     return;
     }else{
@@ -45,6 +50,11 @@ router.post('/login',async (req,res)=>{
 });
 
 router.post('/signup',async (req,res)=>{
+
+     if(!(req.body.gmail&&req.body.password&&req.body.name)){
+        return res.status(401).json({message:"Wrong Credentials"})
+    }
+
      const existingStudent=await Student.findOne({
         gmail:req.body.gmail
     });
@@ -58,6 +68,7 @@ router.post('/signup',async (req,res)=>{
 
     const student=await Student.create({
         name:req.body.name,
+        classRoll:req.body.rollno,
         gmail:req.body.gmail,
         password:req.body.password,
         classes:[]
@@ -68,14 +79,15 @@ router.post('/signup',async (req,res)=>{
 
     res.status(200).json({
         token:token,
-        isLogin:true
+        isLogin:true,
+        role:"student"
     })
     return;
 });
 
 router.post('/mark',authMiddleware,fencingCheck,async (req,res)=>{
     try{
-        const { classId} = req.body;
+        const {classId} = req.body;
 
         await Classes.updateOne(
             {_id:classId},
@@ -87,11 +99,29 @@ router.post('/mark',authMiddleware,fencingCheck,async (req,res)=>{
             {$addToSet:{classes:classId}}
         );
 
-        return res.status(200).json({message:"Attendance marked successfully"});
+        return res.status(200).json({marked:true,message:"Attendance marked successfully"});
     }catch(err){
         console.log(err);
         return res.status(400).json({message:"error while updating class"})
     }
 });
+
+router.get('/attended',authMiddleware ,async (req,res)=>{
+    try{
+        const student=await Student.findById(req.userId)
+
+        const classesID=student.classes||[]
+
+        const classes=await Promise.all(
+            classesID.map((id)=> Classes.findById(id))
+        )
+
+        return res.status(200).json({classes})
+
+    }catch(err){
+        console.log(`Error from /student/classes ${err}`);
+        return res.status(401).json({message:"Internal error"})
+    }
+})
 
 export default router;

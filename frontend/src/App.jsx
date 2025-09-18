@@ -1,63 +1,45 @@
-import { useState,useEffect } from 'react'
+import React,{ lazy } from 'react';
+import { BrowserRouter,Route,Routes } from 'react-router-dom';
+import Landing from './pages/landing';
+import Role from './pages/role';
+import About from './pages/about';
+import Features from './pages/features';
+import Contact from './pages/contact';
+import Tlayout from './pages/teacher/tlayout';
+import Session from './pages/teacher/session';
+import Slayout from './pages/student/slayout';
+import TLogin from './pages/teacher/login';
+import Tsignup from './pages/teacher/signup';
+import Tdashboard from './pages/teacher/dashboard';
+import Slogin from './pages/student/login';
+import Ssignup from './pages/student/signup';
+import StudentDashboard from './pages/student/dashboard';
 
-function App() {
-   const centre={lat:26.9110492,lng:80.9695695};
-   const [user,setUser]=useState({lat:'',lng:''});
-   const [message,setMessage]=useState('');
 
-    useEffect(() => {
-    navigator.geolocation.getCurrentPosition((pos) => {
-      const {latitude,longitude}=pos.coords;
-      setUser({lat:latitude,lng:longitude});
-    } ,null,{
-    enableHighAccuracy: true,  
-    timeout: 10000,
-    maximumAge: 0  
-  });
-  }, []);
-
-  function isInsideGeofence(userLat, userLng, centerLat, centerLng, radiusMeters) {
-    const toRad=(x)=>(x*Math.PI)/180;
-    const R=6371000;
-    const dLat=toRad(centerLat-userLat);
-    const dLng=toRad(centerLng-userLng);
-    const a =
-      Math.sin(dLat/2)**2 +
-      Math.cos(toRad(userLat))*
-        Math.cos(toRad(centerLat))*
-        Math.sin(dLng/2)**2;
-    const c =2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return R*c<=radiusMeters;
-  }
-
-  function onClickHandler(){
-   navigator.geolocation.getCurrentPosition(
-      (pos)=>{
-        const {latitude,longitude}=pos.coords;
-        setUser({lat:latitude,lng:longitude});
-
-        const check=isInsideGeofence(latitude,longitude,centre.lat,centre.lng,50);
-        const result=check?"You are inside geofencing":"You are outside geofencing";
-        setMessage(result);
-      },
-      (err)=>console.error(err),
-      {enableHighAccuracy:true,timeout:10000,maximumAge:0}
-    );
-  }
-
-  return (
-    <div className='bg-black w-full h-screen p-2'>
-      <button onClick={onClickHandler} className='w-full md:w-50 h-20 text-3xl text-white cursor-pointer rounded-4xl mt-20 md:ml-[20%] bg-blue-500'>Click here</button>
-      {message&&<div className='w-full md:w-[40%] rounded-4xl text-4xl text-white py-3 pl-4 mt-20 md:ml-[20%] bg-blue-500'>
-        {message}
-        </div>}
-      {message&&<div className='w-full md:w-[40%]  rounded-4xl text-4xl text-white py-3 pl-4 mt-20 md:ml-[20%] bg-blue-500'>
-        <h1>Your Coordinates:</h1>
-        <p>Latitude:{user.lat}</p>
-        <p>Longitude:{user.lng}</p>
-        </div>}  
+export default function App(){
+  return(
+    <div className='bg-black/90 h-screen'>
+    <BrowserRouter>
+    <Routes>
+      <Route path='/' element={<Landing/>}/>
+      <Route path='/about' element={<About/>}/>
+      <Route path='/features' element={<Features/>}/>
+      <Route path='/contact' element={<Contact/>}/>
+      <Route path='/role' element={<Role/>}/>
+      <Route path='/teacher/*' element={<Tlayout/>}>
+          <Route path='login' element={<TLogin/>}/>
+          <Route path='signup' element={<Tsignup/>}/>
+          <Route path='dashboard' element={<Tdashboard/>}/>
+          <Route path='session' element={<Session/>}/>
+      </Route>
+      <Route path='/student/*' element={<Slayout/>}>
+          <Route path='login' element={<Slogin/>}/>
+          <Route path='signup' element={<Ssignup/>}/>
+          <Route path='dashboard' element={<StudentDashboard/>}/>
+      </Route>
+      
+    </Routes>
+    </BrowserRouter>
     </div>
   )
 }
-
-export default App
